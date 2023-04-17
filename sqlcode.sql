@@ -81,4 +81,12 @@ FROM tripdata
 GROUP BY 1
 ORDER BY 1 DESC
 
--- no of rides per month
+-- ride by user type
+SELECT member_casual, COUNT(ride_id) AS ride_by_user_type
+FROM tripdata
+GROUP BY 1
+
+-- rideable type
+SELECT rideable_type, COUNT(ride_id) AS rideablecount
+FROM tripdata
+GROUP BY 1
