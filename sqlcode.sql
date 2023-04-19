@@ -131,3 +131,13 @@ SELECT member_casual,
       COUNT(ride_id) AS quartercount
 FROM tripdata
 GROUP BY 1, 2
+
+SELECT member_casual, count(ride_id) as total_ride
+FROM tripdata
+GROUP BY 1
+
+SELECT member_casual, rideable_type, count(ride_id) as total_ride
+FROM tripdata
+GROUP BY 1, 2
+
+
