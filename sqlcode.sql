@@ -53,7 +53,17 @@ FROM `portfolio-project-375106.cyclistic.2021_11_tripdata`
 UNION ALL
 SELECT *
 FROM `portfolio-project-375106.cyclistic.2021_12_tripdata`
+),
+
+mytimestamp AS (
+ SELECT ride_id, started_at, EXTRACT(TIME FROM started_at) - EXTRACT(TIME FROM ended_at) AS ridelength
+FROM tripdata
 )
+
+SELECT EXTRACT(QUARTER FROM started_at) AS quarter, SUM(ridelength) as ridelengthsum
+FROM mytimestamp
+GROUP BY 1
+ORDER BY 2
 
 -- total rows
 SELECT *
@@ -140,4 +150,52 @@ SELECT member_casual, rideable_type, count(ride_id) as total_ride
 FROM tripdata
 GROUP BY 1, 2
 
+SELECT CASE WHEN EXTRACT(MONTH FROM started_at) = 1 THEN 'January'
+            WHEN EXTRACT(MONTH FROM started_at) = 2 THEN 'February'
+            WHEN EXTRACT(MONTH FROM started_at) = 3 THEN 'March'
+            WHEN EXTRACT(MONTH FROM started_at) = 4 THEN 'April'
+            WHEN EXTRACT(MONTH FROM started_at) = 5 THEN 'May'
+            WHEN EXTRACT(MONTH FROM started_at) = 6 THEN 'June'
+            WHEN EXTRACT(MONTH FROM started_at) = 7 THEN 'July'
+            WHEN EXTRACT(MONTH FROM started_at) = 8 THEN 'August'
+            WHEN EXTRACT(MONTH FROM started_at) = 9 THEN 'September'
+            WHEN EXTRACT(MONTH FROM started_at) = 10 THEN 'October'
+            WHEN EXTRACT(MONTH FROM started_at) = 11 THEN 'November'
+            WHEN EXTRACT(MONTH FROM started_at) = 12 THEN 'December' END AS Month,
+            SUM(ridelength) AS ridelength
+FROM mytimestamp
+GROUP BY 1
+ORDER BY 2 DESC
 
+SELECT  CASE WHEN EXTRACT(DAYOFWEEK FROM started_at) = 1 THEN 'Sunday'
+         WHEN EXTRACT(DAYOFWEEK FROM started_at) = 2 THEN 'Monday'
+         WHEN EXTRACT(DAYOFWEEK FROM started_at) = 3 THEN 'Tuesday'
+         WHEN EXTRACT(DAYOFWEEK FROM started_at) = 4 THEN 'Wednesday'
+         WHEN EXTRACT(DAYOFWEEK FROM started_at) = 5 THEN 'Thursday'
+         WHEN EXTRACT(DAYOFWEEK FROM started_at) = 6 THEN 'Friday'
+         WHEN EXTRACT(DAYOFWEEK FROM started_at) = 7 THEN 'Saturday' END AS day_of_week,
+      SUM(ridelength) AS ridelength
+FROM mytimestamp
+GROUP BY 1
+
+SELECT  member_casual,
+      AVG(ridelength) AS avgridelength
+FROM mytimestamp
+GROUP BY 1
+
+SELECT  member_casual,
+  CASE WHEN EXTRACT(QUARTER FROM started_at) = 1 THEN '1st Quarter'
+      WHEN EXTRACT(QUARTER FROM started_at) = 2 THEN '2nd Quarter'
+      WHEN EXTRACT(QUARTER FROM started_at) = 3 THEN '3rd Quarter'
+      WHEN EXTRACT(QUARTER FROM started_at) = 4 THEN '4th Quarter' END AS quarter,
+      SUM(ridelength) AS totalridelength
+FROM mytimestamp
+GROUP BY 1, 2
+
+SELECT CASE WHEN EXTRACT(QUARTER FROM started_at) = 1 THEN '1st Quarter'
+      WHEN EXTRACT(QUARTER FROM started_at) = 2 THEN '2nd Quarter'
+      WHEN EXTRACT(QUARTER FROM started_at) = 3 THEN '3rd Quarter'
+      WHEN EXTRACT(QUARTER FROM started_at) = 4 THEN '4th Quarter' END AS quarter,
+      SUM(ridelength) AS totalridelength
+FROM mytimestamp
+GROUP BY 1
