@@ -199,3 +199,15 @@ SELECT CASE WHEN EXTRACT(QUARTER FROM started_at) = 1 THEN '1st Quarter'
       SUM(ridelength) AS totalridelength
 FROM mytimestamp
 GROUP BY 1
+
+SELECT CASE WHEN EXTRACT(DAYOFWEEK FROM started_at) = 1 THEN 'Sunday'
+         WHEN EXTRACT(DAYOFWEEK FROM started_at) = 2 THEN 'Monday'
+         WHEN EXTRACT(DAYOFWEEK FROM started_at) = 3 THEN 'Tuesday'
+         WHEN EXTRACT(DAYOFWEEK FROM started_at) = 4 THEN 'Wednesday'
+         WHEN EXTRACT(DAYOFWEEK FROM started_at) = 5 THEN 'Thursday'
+         WHEN EXTRACT(DAYOFWEEK FROM started_at) = 6 THEN 'Friday'
+         WHEN EXTRACT(DAYOFWEEK FROM started_at) = 7 THEN 'Saturday' END AS day_of_week
+FROM mytimestamp
+GROUP BY 1
+ORDER BY SUM(ridelength)
+LIMIT 1
